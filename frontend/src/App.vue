@@ -1,9 +1,13 @@
 <script setup>
-import HelloWorld from './components/HelloWorld.vue'
+import HelloScreen from './components/HelloScreen.vue'
+
+const MAIN_COLORS = {
+  text: "#ffffff",
+  secondary: "#0d475b",
+  main: "#1fdc98",
+}
 </script>
 
 <template>
-
-  <h1 class="text-red-500">Test</h1>
-  <HelloWorld msg="Vite + Vue" />
+  <HelloScreen msg="Vite + Vue" />
 </template>
