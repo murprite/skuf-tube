@@ -2,9 +2,9 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.auth.routes import router as auth_router
-from app.comments.routes import router as video_router
+from app.comments.routes import router as comments_router
 from app.user.routes import router as user_router
-from app.video.routes import router as comments_router
+from app.video.routes import router as video_router
 
 app = FastAPI(
     title="SkufTube",

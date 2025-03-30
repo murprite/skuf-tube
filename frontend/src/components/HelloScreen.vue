@@ -36,25 +36,10 @@ function handleParallax(e: MouseEvent) {
                 <img src="/preview3.jpg" class="parallax-image" alt="">
             </div>
         </div>
-        <div class="hideMenuBox"></div>
     </div>
 </template>
 
 <style scoped>
-
-.hideMenuBox {
-    box-shadow: rgba(11, 11, 11, 1) 10px 10px 50px;
-    display: none;
-    position: fixed;
-    width: 100vw;
-    height: 100vh;
-    top: -100vh;
-    right: 100vw;
-    background: rgba(11, 11, 11, 1);
-    border-radius: 0 0 50% 0;
-    animation: hideMenu 2s forwards ease-out;
-    z-index: 10;
-}
 .HelloScreen__btn:hover::before {
     transition: all .2s;
     position: absolute;
