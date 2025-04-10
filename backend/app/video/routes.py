@@ -1,33 +1,44 @@
 from fastapi import APIRouter
 from fastapi.responses import StreamingResponse
-import aiofiles
+from pathlib import Path
+import sqlite3
 import os
 
+DB_URL = os.environ.get('DB_URL')
 router = APIRouter()
+
+con = sqlite3.connect(DB_URL)
+cur = con.cursor()
 
 @router.get("/{filename}")
 async def stream_video(filename: str):
-    current_dir = os.path.dirname(os.path.abspath(__file__))
-    video_dir = os.path.join(current_dir, "..", "..", f"static/videos/{filename}.mp4")
-    video_path = os.path.normpath(video_dir)
+    # potential sql injection
+    video_path = Path(cur.execute(f"select * from videos where thumbnail_url = '{filename}'").fetchone()[1])
 
-    if not os.path.exists(video_path):
-        return {"error": "File is not found"}
+    print(cur.execute(f"select * from videos where thumbnail_url = '{filename}'").fetchone(), 'asdasd')
+    print(video_path.resolve())
+    filesize = video_path.stat().st_size
 
     async def video_streamer():
-        async with aiofiles.open(video_path, 'rb') as video_file:
+        with open(video_path, 'rb') as video_file:
             while True:
                 # 1 Mb
-                chunk = await video_file.read(1024 * 1024)
+                chunk = video_file.read(1024 * 1024)
                 if not chunk:
+                    print("End of chunks")
                     break
                 yield chunk
 
     headers = {
+        "content-type": "video/mp4",
         "Accept-Ranges": "bytes",
+        "content-encoding": "identity",
+        "content-length": str(filesize),
+        'Content-Range': f'bytes 0-{filesize}/{filesize}',
+
     }
     return StreamingResponse(
-        video_streamer(),
+        content=video_streamer(),
         media_type="video/mp4",
-        headers=headers
+        headers=headers,
     )
